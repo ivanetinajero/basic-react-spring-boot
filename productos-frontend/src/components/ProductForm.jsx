@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const ProductForm = ({ addProducto }) => {
+const ProductForm = ({ addProducto, productoEditando, updateProducto }) => {
 
   // Estado para los inputs del formulario
   const [nombre, setNombre] = useState('');
@@ -8,21 +8,34 @@ const ProductForm = ({ addProducto }) => {
   const [precio, setPrecio] = useState('');
   const [cantidad, setCantidad] = useState('');
 
+  // ✅ useEffect va aquí, dentro del componente, pero fuera de cualquier otra función
+  useEffect(() => {
+    if (productoEditando) {
+      setNombre(productoEditando.nombre);
+      setDescripcion(productoEditando.descripcion);
+      setPrecio(productoEditando.precio);
+      setCantidad(productoEditando.cantidad);
+    }
+  }, [productoEditando]); // Solo se ejecuta cuando productoEditando cambia
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Crear nuevo producto
     const nuevoProducto = {
-      id: Date.now(), // id único temporal
+      id: productoEditando ? productoEditando.id : Date.now(),
       nombre,
       descripcion,
       precio: parseFloat(precio),
       cantidad: parseInt(cantidad),
-      fechaCreacion: new Date().toISOString().split('T')[0]
+      fechaCreacion: productoEditando ? productoEditando.fechaCreacion : new Date().toISOString().split('T')[0]
     };
 
-    // Llamamos a la función pasada desde el padre
-    addProducto(nuevoProducto);
+    if (productoEditando) {
+      updateProducto(nuevoProducto);
+    } else {
+      addProducto(nuevoProducto);
+    }
 
     // Limpiar formulario
     setNombre('');
@@ -33,7 +46,7 @@ const ProductForm = ({ addProducto }) => {
 
   return (
     <div className="container mt-4">
-      <h2>Agregar Producto</h2>
+      <h2>{productoEditando ? "Editar Producto" : "Agregar Producto"}</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Nombre</label>
@@ -51,11 +64,11 @@ const ProductForm = ({ addProducto }) => {
           <label className="form-label">Cantidad</label>
           <input type="number" className="form-control" value={cantidad} onChange={(e) => setCantidad(e.target.value)} required />
         </div>
-        <button type="submit" className="btn btn-primary">Agregar Producto</button>
+        <button type="submit" className="btn btn-primary">{productoEditando ? "Guardar cambios" : "Agregar producto"}</button>
       </form>
     </div>
   );
-  
+
 };
 
 export default ProductForm;

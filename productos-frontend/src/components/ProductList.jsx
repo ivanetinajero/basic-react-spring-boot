@@ -20,10 +20,25 @@ const ProductList = () => {
         setProductos(productos.filter(producto => producto.id !== id));
     };
 
+    const [productoEditando, setProductoEditando] = useState(null);
+
+    const updateProducto = (productoActualizado) => {
+        setProductos(
+            productos.map((p) =>
+                p.id === productoActualizado.id ? productoActualizado : p
+            )
+        );
+        setProductoEditando(null); // Limpiamos el producto en edición
+    };
+
     return (
         <div className="container mt-4">
 
-            <ProductForm addProducto={addProducto} />
+            <ProductForm
+                addProducto={addProducto}
+                productoEditando={productoEditando}
+                updateProducto={updateProducto}
+            />
 
             <h2 className="mt-5">Listado de Productos</h2>
             <table className="table table-striped table-hover mt-3">
@@ -47,6 +62,7 @@ const ProductList = () => {
                             <td>${producto.precio}</td>
                             <td>{producto.cantidad}</td>
                             <td>{producto.fechaCreacion}</td>
+                            <td><button className="btn btn-warning btn-sm" onClick={() => setProductoEditando(producto)}>Editar</button></td>
                             <td><button className="btn btn-danger btn-sm" onClick={() => deleteProducto(producto.id)}>Eliminar</button></td>
                         </tr>
                     ))}
