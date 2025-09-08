@@ -20,8 +20,8 @@ Este proyecto es un CRUD básico de productos usando **React** en el frontend y 
 ## Instalación y ejecución del frontend (React)
 
 1. **Instalar Node.js**  
-   Asegúrate de tener Node.js y npm instalados. Puedes descargarlo desde:  
-   [https://nodejs.org/](https://nodejs.org/)
+Asegúrate de tener Node.js y npm instalados. Puedes descargarlo desde:  
+[https://nodejs.org/](https://nodejs.org/)
 
 ```bash
 node -v
